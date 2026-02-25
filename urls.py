@@ -7,6 +7,10 @@ urlpatterns = [
     # Dashboard
     path('', views.dashboard, name='dashboard'),
 
+    # Navigation tab aliases
+    path('conversations/', views.chat_conversations_list, name='conversations'),
+
+
     # ChatConversation
     path('chat_conversations/', views.chat_conversations_list, name='chat_conversations_list'),
     path('chat_conversations/add/', views.chat_conversation_add, name='chat_conversation_add'),
