@@ -27,3 +27,14 @@ PERMISSIONS = [
 'live_chat.manage_chat',
 'live_chat.manage_settings',
 ]
+
+ROLE_PERMISSIONS = {
+    "admin": ["*"],
+    "manager": [
+        "manage_chat",
+        "view_chatconversation",
+    ],
+    "employee": [
+        "view_chatconversation",
+    ],
+}
