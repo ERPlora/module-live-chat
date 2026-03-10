@@ -17,7 +17,7 @@ from apps.modules_runtime.navigation import with_module_nav
 
 from .models import ChatConversation, ChatMessage
 
-PER_PAGE_CHOICES = [10, 25, 50, 100]
+PER_PAGE_CHOICES = [12, 24, 48, 96, 0]
 
 
 # ======================================================================
@@ -51,7 +51,7 @@ CHAT_CONVERSATION_SORT_FIELDS = {
 
 def _build_chat_conversations_context(hub_id, per_page=10):
     qs = ChatConversation.objects.filter(hub_id=hub_id, is_deleted=False).order_by('status')
-    paginator = Paginator(qs, per_page)
+    paginator = Paginator(qs, per_page if per_page > 0 else max(qs.count(), 1))
     page_obj = paginator.get_page(1)
     return {
         'chat_conversations': page_obj,
@@ -77,9 +77,9 @@ def chat_conversations_list(request):
     sort_dir = request.GET.get('dir', 'asc')
     page_number = request.GET.get('page', 1)
     current_view = request.GET.get('view', 'table')
-    per_page = int(request.GET.get('per_page', 10))
+    per_page = int(request.GET.get('per_page', 12))
     if per_page not in PER_PAGE_CHOICES:
-        per_page = 10
+        per_page = 12
 
     qs = ChatConversation.objects.filter(hub_id=hub_id, is_deleted=False)
 
@@ -99,7 +99,7 @@ def chat_conversations_list(request):
             return export_to_csv(qs, fields=fields, headers=headers, filename='chat_conversations.csv')
         return export_to_excel(qs, fields=fields, headers=headers, filename='chat_conversations.xlsx')
 
-    paginator = Paginator(qs, per_page)
+    paginator = Paginator(qs, per_page if per_page > 0 else max(qs.count(), 1))
     page_obj = paginator.get_page(page_number)
 
     if request.htmx and request.htmx.target == 'datatable-body':
@@ -191,7 +191,7 @@ CHAT_MESSAGE_SORT_FIELDS = {
 
 def _build_chat_messages_context(hub_id, per_page=10):
     qs = ChatMessage.objects.filter(hub_id=hub_id, is_deleted=False).order_by('conversation')
-    paginator = Paginator(qs, per_page)
+    paginator = Paginator(qs, per_page if per_page > 0 else max(qs.count(), 1))
     page_obj = paginator.get_page(1)
     return {
         'chat_messages': page_obj,
@@ -217,9 +217,9 @@ def chat_messages_list(request):
     sort_dir = request.GET.get('dir', 'asc')
     page_number = request.GET.get('page', 1)
     current_view = request.GET.get('view', 'table')
-    per_page = int(request.GET.get('per_page', 10))
+    per_page = int(request.GET.get('per_page', 12))
     if per_page not in PER_PAGE_CHOICES:
-        per_page = 10
+        per_page = 12
 
     qs = ChatMessage.objects.filter(hub_id=hub_id, is_deleted=False)
 
@@ -239,7 +239,7 @@ def chat_messages_list(request):
             return export_to_csv(qs, fields=fields, headers=headers, filename='chat_messages.csv')
         return export_to_excel(qs, fields=fields, headers=headers, filename='chat_messages.xlsx')
 
-    paginator = Paginator(qs, per_page)
+    paginator = Paginator(qs, per_page if per_page > 0 else max(qs.count(), 1))
     page_obj = paginator.get_page(page_number)
 
     if request.htmx and request.htmx.target == 'datatable-body':
