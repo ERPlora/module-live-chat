@@ -7,6 +7,7 @@ MODULE_ICON = 'chatbubble-ellipses-outline'
 MODULE_DESCRIPTION = _('Real-time live chat with customers')
 MODULE_AUTHOR = 'ERPlora'
 MODULE_CATEGORY = 'communication'
+HAS_MODELS = True
 
 MENU = {
     'label': _('Live Chat'),
